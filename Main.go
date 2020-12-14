@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -29,8 +30,9 @@ func main() {
 
 	}
 	strContent := string(content[:])
-	var resultString string
 	scanner := bufio.NewScanner(strings.NewReader(strContent))
+	index := 0
+	mapOfUni := make(map[int]uni)
 	for scanner.Scan() {
 		var temp string
 		temp = scanner.Text()
@@ -42,8 +44,15 @@ func main() {
 			temp = strings.ReplaceAll(temp, "\">", " ")
 			temp = strings.ReplaceAll(temp, "</option>", "")
 			temp = strings.ReplaceAll(temp, "<", "")
-			resultString += temp + "\n"
+			num, err := strconv.Atoi(temp[0:4])
+			if err != nil {
+				fmt.Print("atoi not working")
+			}
+			var tempUni = new(uni)
+			tempUni.id = num
+			tempUni.name = temp[5:]
+			mapOfUni[index] = *tempUni
 		}
 	}
-	fmt.Print(resultString)
+
 }
